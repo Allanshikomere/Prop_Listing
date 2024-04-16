@@ -1,0 +1,15 @@
+/* styles.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  
+  body.home-page {
+    background-image: url('/public/house.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+  }
+  
