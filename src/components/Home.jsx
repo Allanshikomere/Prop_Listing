@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Heading, Text, Button } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import SearchBar from './SearchBar'; // Import the SearchBar component
 
 const Home = () => {
+  const [showSearchBar, setShowSearchBar] = useState(false);
+
+  const handleExploreListings = () => {
+    setShowSearchBar(true); // Show the SearchBar when Explore Listings is clicked
+  };
+
   return (
     <Box
       p={8}
@@ -42,10 +49,14 @@ const Home = () => {
           size="lg"
           fontWeight="bold"
           _hover={{ bg: 'blue.600' }}
+          onClick={handleExploreListings} // Handle click event for Explore Listings
         >
           Explore Listings
         </Button>
       </Link>
+
+      {/* Conditional rendering of SearchBar */}
+      {showSearchBar && <SearchBar />}
     </Box>
   );
 };

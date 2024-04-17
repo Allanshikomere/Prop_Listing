@@ -36,25 +36,28 @@ function InitialFocus() {
  const handleSubmit = (e) => {
   e.preventDefault();
 
-  fetch("BACKEND_ENDPOINT", {
+  fetch("http://127.0.0.1:5555/submit_form", {
      method: "POST",
      headers: {
        "Content-Type": "application/json",
      },
      body: JSON.stringify(formData),
   })
-     .then((response) => {
-       if (response.ok) {
-         alert("Form submitted successfully!");
-         onClose();
-       } else {
-         throw new Error("Failed to submit form. Please try again.");
-       }
-     })
-     .catch((error) => {
-       console.error("Error submitting form:", error);
-       alert("Failed to submit form. Please try again.");
-     });
+  .then(response => {
+    if (response.ok) {
+      setFormData({
+        fullName: "",
+        phone: "",
+        message: "",
+      });
+      onClose();
+      alert("Form submitted successfully!");
+    } else {
+      throw new Error("Failed to submit form.");
+    }
+  })
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
  };
  
 
@@ -73,7 +76,7 @@ function InitialFocus() {
           <ModalHeader>Take the First Step to Your New Home</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off">
             <FormControl>
               <FormLabel>Full name</FormLabel>
               <Input
@@ -104,15 +107,13 @@ function InitialFocus() {
                  onChange={handleInputChange}
                 />
             </FormControl>
+            <Button type="submit" colorScheme='blue' mr={3} marginTop={"3rem"} marginLeft={'8rem'}>
+              Send Request
+            </Button>
+            <Button onClick={onClose}  marginTop={"3rem"} marginLeft={'1rem'}>Cancel</Button>
           </form>
           </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='blue' mr={3}>
-              Send Request
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

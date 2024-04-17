@@ -1,34 +1,68 @@
-import React, { useState } from 'react';
-import { ChakraProvider, Box, Heading } from '@chakra-ui/react';
-import Sell from './components/Sell';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ChakraProvider, ColorModeScript, Box, Heading, Container } from '@chakra-ui/react';
+import Navbar from './components/Navbar';
+import SearchBar from './components/SearchBar';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Home from './components/Home';
+import SellCard from './components/SellCard';
+import ForSale from './components/ForSale';
+import BuyHomeCard from './components/BuyHomeCard';
+import PropertyList from './components/PropertyList';
 import Footer from './components/Footer';
+import './styles.css';
+import Services from './components/Services';
+import AboutUs from './components/AboutUs';
+import theme from './components/Theme';
 
-const App = () => {
-    // State to store the list of buy properties
-    const [buyProperties, setBuyProperties] = useState([]);
+function App() {
+  const [buyProperties, setBuyProperties] = useState([]);
+  const [properties, setProperties] = useState([]);
 
-    // Function to handle new property submissions from Sell component
-    const handleNewProperty = (newProperty) => {
-        // Update the list of buy properties with the new property
-        setBuyProperties([...buyProperties, newProperty]);
-    };
+  useEffect(() => {
+    fetch('http://127.0.0.1:5555/properties')
+      .then((res) => res.json())
+      .then((data) => setProperties(data));
+  }, []);
 
-    return (
-        <ChakraProvider>
-            <Box padding="20px" maxWidth="1000px" mx="auto">
-                {/* Heading */}
-                <Heading as="h1" mb="20px" textAlign="center" color="teal.600" fontSize="2xl">
-                    Property Listing
-                </Heading>
+  const handleNewProperty = (newProperty) => {
+    setBuyProperties([...buyProperties, newProperty]);
+  };
 
-                {/* Sell component */}
-                <Sell onNewProperty={handleNewProperty} />
+  return (
+    <ChakraProvider theme={theme}>
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+      <Router>
+        <Navbar />
+        <SearchBar />
+        <Box padding="20px">
+          {/* <Heading as="h1" mb="20px" textAlign="center">
+            Property Listing
+          </Heading> */}
+          <Routes>
+            {/* Routes from the original App */}
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signin" element={<SignIn />} />
 
-                {/* Footer component */}
-                <Footer />
-            </Box>
-        </ChakraProvider>
-    );
-};
+            {/* Routes from Cynthia's App */}
+            <Route path="/ForSale" element={<ForSale onNewProperty={handleNewProperty} />} />
+            <Route path="/sell" element={<SellCard />} />
+
+            {/* Routes from Mariam's App */}
+            <Route path="/buy" element={<BuyHomeCard />} />
+            <Route path="/PropertyList" element={<PropertyList properties={properties} />} />
+          </Routes>
+          <Container maxW="container.lg" centerContent>
+            <Services />
+            <AboutUs />
+        </Container>
+          <Footer />
+        </Box>
+      </Router>
+    </ChakraProvider>
+  );
+}
 
 export default App;

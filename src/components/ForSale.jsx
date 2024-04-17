@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useFormik } from 'formik';
 import { Box, Button, FormControl, FormLabel, Input, Text, Textarea, Select } from '@chakra-ui/react';
 
-const Sell = ({ onNewProperty }) => {
+const ForSale = ({ onNewProperty }) => {
     // Initial form values
     const initialValues = {
         title: '',
@@ -166,4 +166,4 @@ const Sell = ({ onNewProperty }) => {
     );
 };
 
-export default Sell;
+export default ForSale;
