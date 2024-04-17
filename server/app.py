@@ -14,6 +14,25 @@ app.json.compact = False
 migrate = Migrate(app, db)
 db.init_app(app)
 CORS(app)
+
+@app.route("/submit_form", methods=['POST'])
+def submit_form():
+    # try:
+        form_data = request.get_json()
+        user_name = form_data.get('fullName')
+        user_phone = form_data.get('phone')
+        user_message = form_data.get('message')
+
+        new_user = User(
+            name=user_name,
+            phone_number=user_phone,
+            message=user_message
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({'message': 'Form submitted'}), 200
 # CRUD operations for User
 @app.route('/users', methods=['POST'])
 def create_user():
