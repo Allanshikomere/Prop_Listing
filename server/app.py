@@ -1,9 +1,11 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from models import db, User, Property, Review
 # from flask_cors import CORS
 from flask_cors import CORS
+import os
+
 
 
 app = Flask(__name__)
@@ -15,6 +17,13 @@ app.json.compact = False
 migrate = Migrate(app, db)
 db.init_app(app)
 CORS(app)
+
+# Define the upload folder and create directories if they do not exist
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/images')
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/signup', methods=['POST'])
@@ -99,11 +108,45 @@ def delete_user(id):
 # CRUD operations for Property
 @app.route('/properties', methods=['POST'])
 def create_property():
-    data = request.get_json()
-    property = Property(title=data['title'], image_url=data['image_url'], description=data['description'], location=data['location'], property_type=data['property_type'], price=data['price'])
-    db.session.add(property)
-    db.session.commit()
-    return jsonify({'message': 'Property created successfully'}), 201
+    try:
+        # Get the form data
+        title = request.form.get('title')
+        description = request.form.get('description')
+        price = request.form.get('price')
+        location = request.form.get('location')
+        property_type = request.form.get('property_type')
+
+        # Get the image file
+        image_file = request.files.get('image')
+
+        if not image_file:
+            return jsonify({'message': 'Image file is required'}), 400
+
+        # Save the image file to the server
+        image_filename = os.path.join(app.config['UPLOAD_FOLDER'], image_file.filename)
+        image_file.save(image_filename)
+
+        # Create a URL for the saved image
+        image_url = url_for('static', filename=f'images/{image_file.filename}', _external=True)
+
+        # Create a new property object
+        new_property = Property(
+            title=title,
+            description=description,
+            location=location,
+            price=price,
+            property_type=property_type,
+            image_url=image_url
+        )
+
+        # Save the property to the database
+        db.session.add(new_property)
+        db.session.commit()
+
+        return jsonify({'message': 'Property created successfully', 'property': new_property.to_dict()}), 201
+    except Exception as e:
+        return jsonify({'message': f'Error: {str(e)}'}), 400
+
 
 @app.route('/properties', methods=['GET'])
 def get_properties():

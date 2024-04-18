@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #888;
 }
+.sell-card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust as needed */
+}
+
+.center-content {
+  width: 100%; /* Ensure content is centered within the container */
+  max-width: 600px; /* Adjust as needed */
+}

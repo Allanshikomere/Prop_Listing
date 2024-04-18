@@ -1,47 +1,43 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import { Box, Button, FormControl, FormLabel, Input, Text, Textarea, Select } from '@chakra-ui/react';
 
 const ForSale = ({ onNewProperty }) => {
-    // Initial form values
-    const initialValues = {
-        title: '',
-        description: '',
-        price: '',
-        type: '',
-        image: null,
-    };
-
-    // Create a reference to the file input
+    const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
 
-    // Formik form handling and validation
     const formik = useFormik({
-        initialValues,
-        onSubmit: (values) => {
-            // Simulate an API request to save the property data
-            setTimeout(() => {
-                // Create a new property object
-                const newProperty = {
-                    title: values.title,
-                    description: values.description,
-                    price: values.price,
-                    type: values.type,
-                    image: URL.createObjectURL(values.image), // Use URL.createObjectURL to display the image
-                };
+        initialValues: {
+            title: '',
+            description: '',
+            price: '',
+            type: '',
+            location: '', // Add location to the initial values
+            image: null,
+        },
+        onSubmit: async (values) => {
+            try {
+                const formData = new FormData();
+                formData.append('title', values.title);
+                formData.append('description', values.description);
+                formData.append('price', values.price);
+                formData.append('property_type', values.type);
+                formData.append('location', values.location); // Include location in form data
+                formData.append('image', values.image);
 
-                // Call the parent function to update the buy properties list
-                onNewProperty(newProperty);
+                const response = await axios.post('http://localhost:5555/properties', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
 
-                // Show success message
+                onNewProperty(response.data);
                 alert('Property submitted successfully!');
-
-                // Clear form values
                 formik.resetForm();
-
-                // Reset the file input
-                fileInputRef.current.value = '';
-            }, 1000);
+            } catch (error) {
+                setError(error.message);
+            }
         },
         validate: (values) => {
             const errors = {};
@@ -57,6 +53,12 @@ const ForSale = ({ onNewProperty }) => {
             if (!values.type) {
                 errors.type = 'Type is required';
             }
+            if (!values.location) { // Validate location field
+                errors.location = 'Location is required';
+            }
+            if (!values.image) {
+                errors.image = 'Image is required';
+            }
             return errors;
         },
     });
@@ -64,7 +66,7 @@ const ForSale = ({ onNewProperty }) => {
     return (
         <Box
             width="100%"
-            height="100vh" // Set height to full page
+            height="100vh"
             display="flex"
             justifyContent="center"
             alignItems="center"
@@ -72,7 +74,7 @@ const ForSale = ({ onNewProperty }) => {
             <Box
                 width="100%"
                 maxWidth="600px"
-                mx="auto" // Auto margin to center the form horizontally
+                mx="auto"
                 p="20px"
                 boxShadow="md"
                 borderRadius="md"
@@ -139,6 +141,21 @@ const ForSale = ({ onNewProperty }) => {
                         </Select>
                         {formik.touched.type && formik.errors.type && (
                             <Text color="red">{formik.errors.type}</Text>
+                        )}
+                    </FormControl>
+
+                    <FormControl id="location" mb="10px"> {/* Location form control */}
+                        <FormLabel>Location</FormLabel>
+                        <Input
+                            type="text"
+                            name="location"
+                            value={formik.values.location}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            isInvalid={formik.touched.location && formik.errors.location}
+                        />
+                        {formik.touched.location && formik.errors.location && (
+                            <Text color="red">{formik.errors.location}</Text>
                         )}
                     </FormControl>
 
