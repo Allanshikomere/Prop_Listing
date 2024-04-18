@@ -35,8 +35,19 @@ class Property(db.Model):
     property_type = db.Column(db.Text, nullable=False)
     price = db.Column(db.Integer, nullable=False)
     
-
     reviews = db.relationship('Review', backref='property')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'image_url': self.image_url,
+            'description': self.description,
+            'location': self.location,
+            'property_type': self.property_type,
+            'price': self.price,
+        }
+
 
    
 class Review(db.Model):
