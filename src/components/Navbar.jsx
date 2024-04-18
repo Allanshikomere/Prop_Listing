@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Flex, Heading, Button, IconButton, Spacer, useColorMode } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { FiMenu, FiMoon, FiSun } from 'react-icons/fi';
+import "./navbar.css"
 
 const Navbar = () => {
     const { colorMode, toggleColorMode } = useColorMode();
@@ -26,19 +27,19 @@ const Navbar = () => {
                 </Flex>
 
                 {/* Navigation Links and Buttons */}
-                <Flex align="center">
+                <Flex align="center" className='home'>
                     <Link to="/" style={{ textDecoration: 'none' }}>
-                        <Button variant="ghost" color="white">
+                        <Button variant="ghost" color="white" >
                             Home
                         </Button>
                     </Link>
                     <Link to="/signin" style={{ textDecoration: 'none' }}>
-                        <Button variant="ghost" color="white" ml={4}>
+                        <Button variant="ghost" color="white" ml={4} className='sign-in'>
                             Sign In
                         </Button>
                     </Link>
                     <Link to="/signup" style={{ textDecoration: 'none' }}>
-                        <Button variant="ghost" color="white" ml={4}>
+                        <Button variant="ghost" color="white" ml={4} className='sign-up'>
                             Sign Up
                         </Button>
                     </Link>

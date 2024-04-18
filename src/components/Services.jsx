@@ -24,7 +24,7 @@ const Services = () => {
     const cardBgColor = useColorModeValue('white', 'gray.800');
 
     return (
-        <Box py={10}>
+        <Box py={10} className='services'>
             <Heading as="h2" size="xl" textAlign="center" mb={8}>
                 Our Services
             </Heading>

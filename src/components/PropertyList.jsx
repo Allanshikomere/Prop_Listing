@@ -2,22 +2,23 @@ import React from 'react'
 import { Box,Heading,Card, CardBody, Stack, Image, ButtonGroup, Button, Divider, CardFooter,Text,Grid, GridItem } from "@chakra-ui/react";
 import InitialFocus from './RequestModal';
 import SearchBar from './SearchBar';
+import "./property.css"
 
 
 function PropertyList({properties}){
 
     return(
         <div>
-            <Box bg='teal' w='100%' p={3} color='white'>
-            <Heading size='1.5xl' marginLeft={'35rem'} marginTop={'1rem'} marginBottom={'1rem'}>PROPERTY LISTINGS FOR PURCHASE</Heading>
+            <Box bg='teal' w='50%' p={1} color='white' marginTop={'6rem'} marginLeft={'21rem'} className='box-tittle'>
+            <Heading size='1.5xl' marginTop={'1rem'} marginBottom={'1rem'} >PROPERTY LISTINGS FOR PURCHASE</Heading>
             </Box>
 
             <SearchBar properties={properties}/>
 
-            <Grid templateColumns={'repeat(3, minmax(100px , 1fr))'} gap={20} marginLeft={'6rem'}>
+            <Grid templateColumns={'repeat(3, minmax(100px , 1fr))'} gap={40} marginLeft={'6rem'} className='prop-card'>
             {properties.map((prop) => {
                 return <GridItem key={prop.id}>
-                    <Card maxW='sm'>
+                    <Card maxW='sm' className='all-cards'>
                     <CardBody>
                         <Image
                         src={prop.image_url}
