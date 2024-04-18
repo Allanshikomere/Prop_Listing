@@ -89,7 +89,7 @@ const SignIn = () => {
         </Stack>
       </form>
 
-      {/* Styled Sign Up card */}
+      {/* Styled Sign Up card
       <Box mt={8} p={4} borderWidth="1px" borderRadius="md" bg="gray.50">
         <Heading as="h2" size="md" color="blue.500" textAlign="center" marginBottom="4">
           Sign Up
@@ -100,7 +100,7 @@ const SignIn = () => {
         <Button colorScheme="blue" onClick={handleSignUp} width="100%">
           Sign Up
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 };

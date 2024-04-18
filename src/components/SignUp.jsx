@@ -10,7 +10,7 @@ import {
   Alert,
   AlertIcon,
   Progress,
-  Heading
+  Heading,
 } from '@chakra-ui/react';
 
 const SignUp = () => {
@@ -23,14 +23,14 @@ const SignUp = () => {
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to manage success message
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
     if (name === 'password') {
-      // Calculate password strength based on length
-      const strengthPercentage = (value.length / 10) * 100; // Assuming max length of 10 for simplicity
+      const strengthPercentage = (value.length / 10) * 100;
       setPasswordStrength(strengthPercentage);
     }
   };
@@ -38,19 +38,18 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate password match
     if (formData.password !== formData.confirmPassword) {
       setPasswordMatchError(true);
       return;
     }
 
-    // Clear error if passwords match
     setPasswordMatchError(false);
 
-    // Handle form submission (e.g., API call, authentication)
+    // Mock API call or any other submission handling
+    // Here you can perform actual submission logic
     console.log('Form submitted:', formData);
 
-    // Reset form fields
+    // Reset form fields and show success message
     setFormData({
       firstName: '',
       lastName: '',
@@ -58,14 +57,15 @@ const SignUp = () => {
       password: '',
       confirmPassword: '',
     });
-    setPasswordStrength(0); // Reset password strength indicator
+    setPasswordStrength(0);
+    setShowSuccessMessage(true); // Show success message
   };
 
   return (
     <Box maxW="md" mx="auto" p={4}>
       <Heading as="h2" size="lg" color="blue.500" textAlign="center" marginTop="4">
-      Sign Up
-    </Heading>
+        Sign Up
+      </Heading>
       <form onSubmit={handleSubmit}>
         <Stack spacing={4}>
           <FormControl>
@@ -165,9 +165,16 @@ const SignUp = () => {
           <Button type="submit" colorScheme="blue" variant="solid">
             Sign Up
           </Button>
+
+         
+          {showSuccessMessage && (
+            <Alert status="success">
+              <AlertIcon />
+              Welcome! Thank you for signing up.
+            </Alert>
+          )}
         </Stack>
       </form>
-      
     </Box>
   );
 };
