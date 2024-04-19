@@ -4,7 +4,7 @@ import { Box, Flex, Heading, Text, Image, Button } from '@chakra-ui/react';
 
 const AboutUs = () => {
     return (
-        <Box p={8}>
+        <Box p={8} className='about-us'>
             <Flex direction={{ base: 'column', md: 'row' }} align="center" justify="space-between">
                 <Box flex="1" mr={{ base: 0, md: 8 }} mb={{ base: 8, md: 0 }}>
                     <Heading as="h2" size="xl" mb={4}>

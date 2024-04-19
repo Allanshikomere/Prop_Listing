@@ -1,0 +1,33 @@
+@media(max-width: 393px){
+    .prop-card{
+        max-width: 393px;
+    }
+    .all-cards{
+      width: 60vw;
+      height: 100vh;
+      margin-left: -7.5rem; 
+    }
+    .services{
+      margin-top: 5rem;
+    }
+    .box-tittle{
+        margin-left: -5rem;
+    }
+  }
+
+  @media(min-width: 820px){
+    .prop-card{
+        max-width: 820px;
+    }
+    .all-cards{
+      width: 35vw;
+      height: 60vh;
+      margin-left: -7.5rem; 
+    }
+    .services{
+      margin-top: 5rem;
+    }
+    .box-tittle{
+        margin-left: -5rem;
+    }
+  }

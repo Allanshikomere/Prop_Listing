@@ -16,22 +16,6 @@ migrate = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 
-
-@app.route('/signup', methods=['POST'])
-def signup():
-    data = request.get_json()
-    # hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-
-    new_user = User(
-        first_name=data['firstName'],
-        last_name=data['lastName'],
-        email=data['email'],
-        password=hashed_password.decode('utf-8')  # Store hashed password as string
-    )
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
-
 @app.route("/submit_form", methods=['POST'])
 def submit_form():
     # try:
@@ -49,7 +33,8 @@ def submit_form():
         db.session.add(new_user)
         db.session.commit()
 
-        return jsonify({'message': 'Form submitted'}), 200
+        return jsonify({'message': 'Form submitted successfully'}), 200
+
 # CRUD operations for User
 @app.route('/users', methods=['POST'])
 def create_user():

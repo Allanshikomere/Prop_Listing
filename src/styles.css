@@ -13,3 +13,12 @@ body {
     min-height: 100vh;
   }
   
+/* @media(max-width: 393px){
+  .all-cards{
+    width: 50vw;
+  }
+  .services{
+    margin-top: 255rem;
+
+  }
+} */

@@ -14,7 +14,7 @@ function BuyHomeCard(){
                     borderRadius='lg'
                     />
                     <Stack mt='6' spacing='3'>
-                    <Heading size='md'>Browse homes</Heading>
+                    <Heading size='md'>Browse Properties</Heading>
                     <Text>
                     Embark on your quest for the perfect home right here. Seamlessly browse and effortlessly apply—all in one convenient spot.
                     </Text>
@@ -25,7 +25,7 @@ function BuyHomeCard(){
                     <ButtonGroup spacing='2'>
                     <Flex as={Link} to="/PropertyList">
                     <Button variant='solid' colorScheme='blue'>
-                        Browse homes
+                        Browse properties
                     </Button>
                     </Flex>
                     </ButtonGroup>

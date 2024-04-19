@@ -1,0 +1,11 @@
+@media(max-width: 393px){
+    .home{
+        margin-left: 10rem;
+    }
+    .sign-in{
+        margin-left: -1rem;
+    }
+    .sign-up{
+        margin-left: -1rem;
+    }
+  }

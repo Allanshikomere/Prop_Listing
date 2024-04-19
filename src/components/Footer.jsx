@@ -4,7 +4,7 @@ import { FaHome, FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const Footer = () => {
     return (
-        <Box as="footer" bg="teal.600" color="white" py={8} px={10} w="100%">
+        <Box className='footer' as="footer" bg="teal.600" color="white" py={8} px={10} w="100%">
             <Flex
                 justify="space-between"
                 align="center"

@@ -23,7 +23,7 @@ function SearchBar({properties}) {
                 <InputLeftElement pointerEvents="none">
                     <SearchIcon className="searchIcon" marginLeft={'12rem'} color='teal' _placeholder={{ color: 'inherit' }} />
                 </InputLeftElement>
-                <Input placeholder="Search by property type" onChange={displayChange} width={'90.8vw'} marginLeft={'5.7rem'} color='grey' _placeholder={{ color: 'inherit' }} focusBorderColor='teal.400'/>
+                <Input placeholder="Search by property type" onChange={displayChange} width={'95vw'} marginLeft={'5.7rem'} color='grey' _placeholder={{ color: 'inherit' }} focusBorderColor='teal.400'/>
             </InputGroup> 
 
             <Grid templateColumns={'repeat(3, minmax(100px , 1fr))'} gap={20} marginLeft={'6rem'} marginTop={'2rem'}>

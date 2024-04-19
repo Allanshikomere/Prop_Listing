@@ -35,7 +35,6 @@ function App() {
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <Router>
         <Navbar />
-        {/* <SearchBar /> */}
         <Box padding="20px">
           {/* <Heading as="h1" mb="20px" textAlign="center">
             Property Listing
