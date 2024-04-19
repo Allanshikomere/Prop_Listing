@@ -5,6 +5,9 @@ from models import db, User, Property, Review
 # from flask_cors import CORS
 from flask_cors import CORS
 import os
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+import bcrypt
+
 
 
 
@@ -18,6 +21,9 @@ migrate = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key_here'
+jwt = JWTManager(app)
+
 # Define the upload folder and create directories if they do not exist
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/images')
 if not os.path.exists(UPLOAD_FOLDER):
@@ -29,17 +35,60 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    # hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+    
+    # Check if all required fields are present in the request data
+    required_fields = ['firstName', 'lastName', 'email', 'password']
+    if not all(field in data for field in required_fields):
+        return jsonify({'message': 'Missing required fields'}), 400
+    
+    # Check if the email is already in use
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({'message': 'Email already in use'}), 409
+    
+    try:
+        # Hash password and create a new user
+        hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+        new_user = User(
+            first_name=data['firstName'],
+            last_name=data['lastName'],
+            email=data['email'],
+            password=hashed_password.decode('utf-8')
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        
+        # Generate access token
+        access_token = create_access_token(identity=new_user.id)
+        
+        return jsonify({'message': 'User registered successfully', 'access_token': access_token}), 201
+    except Exception as e:
+        # Log the exception (you can also use a logging library)
+        print(f"Error: {e}")
+        return jsonify({'message': 'Internal server error'}), 500
 
-    new_user = User(
-        first_name=data['firstName'],
-        last_name=data['lastName'],
-        email=data['email'],
-        password=hashed_password.decode('utf-8')  # Store hashed password as string
-    )
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
+@app.route('/signin', methods=['POST'])
+def signin():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    
+    user = User.query.filter_by(email=email).first()
+    
+    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        # Generate access token
+        access_token = create_access_token(identity=user.id)
+        
+        return jsonify({'message': 'Logged in successfully', 'access_token': access_token})
+    else:
+        return jsonify({'message': 'Invalid credentials'}), 401
+
+@app.route('/protected_route', methods=['GET'])
+@jwt_required()
+def protected_route():
+    current_user_id = get_jwt_identity()
+    # Perform actions with the current_user_id
+    return jsonify({'message': 'You are authorized to access this route'}), 200
+
 
 @app.route("/submit_form", methods=['POST'])
 def submit_form():
@@ -62,11 +111,28 @@ def submit_form():
 # CRUD operations for User
 @app.route('/users', methods=['POST'])
 def create_user():
-    data = request.get_json()
-    user = User(name=data['name'], email=data['email'], phone_number=data['phone_number'], message=data['message'])
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({'message': 'User created successfully'}), 201
+    try:
+        data = request.get_json()
+        
+        # Validate input data
+        required_fields = ['name', 'email', 'phone_number']
+        if not all(field in data for field in required_fields):
+            return jsonify({'message': 'Missing required fields'}), 400
+        
+        # Check if the email is already in use
+        if User.query.filter_by(email=data['email']).first():
+            return jsonify({'message': 'Email already in use'}), 409
+        
+        # Create a new user
+        user = User(name=data['name'], email=data['email'], phone_number=data['phone_number'], message=data.get('message', ''))
+        db.session.add(user)
+        db.session.commit()
+        
+        return jsonify({'message': 'User created successfully'}), 201
+    except Exception as e:
+        # Log the error
+        traceback.print_exc()  # This will print the full traceback to the console
+        return jsonify({'message': 'Internal server error'}), 500
 
 @app.route('/users', methods=['GET'])
 def get_users():

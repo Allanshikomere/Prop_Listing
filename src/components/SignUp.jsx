@@ -23,7 +23,8 @@ const SignUp = () => {
   });
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State to manage success message
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [signUpError, setSignUpError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -35,30 +36,44 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Check password match
     if (formData.password !== formData.confirmPassword) {
-      setPasswordMatchError(true);
-      return;
+        setPasswordMatchError(true);
+        return;
     }
-
     setPasswordMatchError(false);
 
-    // Mock API call or any other submission handling
-    // Here you can perform actual submission logic
-    console.log('Form submitted:', formData);
 
-    // Reset form fields and show success message
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    });
-    setPasswordStrength(0);
-    setShowSuccessMessage(true); // Show success message
+    // Make an API call to your backend sign-up endpoint
+    try {
+        const response = await fetch('http://127.0.0.1:5555/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Handle successful sign-up, e.g., save token to localStorage
+            localStorage.setItem('authToken', data.token);
+            
+            // Update your authentication state as needed
+            setShowSuccessMessage(true);
+            
+            // Optionally, navigate to a different page, e.g., the dashboard
+            // navigate('/dashboard');
+        } else {
+            const errorData = await response.json();
+            setSignUpError(errorData.message || 'Sign-up failed. Please try again.');
+        }
+    } catch (error) {
+        setSignUpError('An error occurred during sign-up. Please try again.');
+    }
   };
 
   return (
@@ -166,11 +181,17 @@ const SignUp = () => {
             Sign Up
           </Button>
 
-         
           {showSuccessMessage && (
             <Alert status="success">
               <AlertIcon />
               Welcome! Thank you for signing up.
+            </Alert>
+          )}
+
+          {signUpError && (
+            <Alert status="error">
+              <AlertIcon />
+              {signUpError}
             </Alert>
           )}
         </Stack>

@@ -14,14 +14,37 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSignIn = (e) => {
+  const handleSignIn = async (e) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
-   
-    setEmail('');
-    setPassword('');
-  };
+    
+    try {
+        const response = await fetch('http://127.0.0.1:5555/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            // Store the token in localStorage or sessionStorage
+            localStorage.setItem('authToken', data.token);
+            
+            // Update authentication state
+            setIsAuthenticated(true);
+            
+            // Navigate to the appropriate page or update the UI
+            // e.g., navigate('/dashboard');
+        } else {
+            console.error('Login failed');
+            // Provide feedback to the user, e.g., show an error message
+        }
+    } catch (error) {
+        console.error('An error occurred during login:', error);
+        // Provide feedback to the user
+    }
+};
 
   const handleSignUp = () => {
     
