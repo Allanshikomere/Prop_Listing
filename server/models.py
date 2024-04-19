@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+import bcrypt
+
 # from sqlalchemy import ForeignKey
 
 db = SQLAlchemy()
@@ -18,10 +20,18 @@ class User(db.Model):
     email = db.Column(db.String, nullable=True)
     phone_number = db.Column(db.Integer)
     message = db.Column(db.Text, nullable=True)
-    # address = db.Column(db.Text, nullable=True)
-    
+    password = db.Column(db.String(60), nullable=False)  # Field for storing the hashed password
 
-    reviews = db.relationship('Review', backref='user',cascade="all, delete-orphan")
+    # Relationship with reviews
+    reviews = db.relationship('Review', backref='user', cascade="all, delete-orphan")
+
+    # Method to set the user's password
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    # Method to verify a provided password against the stored hashed password
+    def verify_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
 
 
 class Property(db.Model):

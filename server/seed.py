@@ -2,13 +2,12 @@ from app import app, db
 from models import User, Property, Review
 
 users_list = [
-    {"name": "Juma Hassan", "email": "jumahassan@gmail.com", "phone_number": '0743269763',"message":""},  
-    {"name": "Mary Maina", "email": "marymaina@gmail.com", "phone_number": '0726378493',"message":""},
-    {"name": "Abby Chito", "email": "abbychito@gmail.com","phone_number": '0725673892',"message":""},
-    {"name": "Lorna Wafula", "email": "lornawafula@gmail.com", "phone_number": '0716378493',"message":""},
-    {"name": "James Mwendwa", "email": "jamesmwendwa@gmail.com", "phone_number": '0706378483',"message":""},
+    {"name": "Juma Hassan", "email": "jumahassan@gmail.com", "phone_number": '0743269763', "message": "", "password": "password123"},
+    {"name": "Mary Maina", "email": "marymaina@gmail.com", "phone_number": '0726378493', "message": "", "password": "password456"},
+    {"name": "Abby Chito", "email": "abbychito@gmail.com", "phone_number": '0725673892', "message": "", "password": "password789"},
+    {"name": "Lorna Wafula", "email": "lornawafula@gmail.com", "phone_number": '0716378493', "message": "", "password": "password012"},
+    {"name": "James Mwendwa", "email": "jamesmwendwa@gmail.com", "phone_number": '0706378483', "message": "", "password": "password345"},
 ]
-
 reviews = [
     {"property_id": 1, "user_id": 3, "rating": 4, "comment": "Beautiful home with a spacious garden."},
     {"property_id": 2, "user_id": 4, "rating": 5, "comment": "Stylish urban living in Kileleshwa."},
@@ -44,10 +43,16 @@ properties = [
 
 # User model
 def seed_users():
-        users = [User(name=data['name'], email=data['email'], phone_number=data['phone_number'], message=data['message']) for data in users_list]
+    users = [User(
+        name=data['name'],
+        email=data['email'],
+        phone_number=data['phone_number'],
+        message=data['message'],
+        password=data['password']  # Include password
+    ) for data in users_list]
 
-        db.session.add_all(users)
-        db.session.commit()
+    db.session.add_all(users)
+    db.session.commit()
 
 # Property model
 def seed_properties():
